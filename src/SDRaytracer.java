@@ -14,7 +14,7 @@ import java.util.concurrent.Future;
 */
 
 
-public class SDRaytracer{
+public class SDRaytracer {
     private static final long serialVersionUID = 1L;
     boolean profiling = false;
     int width = 1000;
