@@ -52,36 +52,31 @@ class Matrix {
                 {0, 0, 0, 1}});
     }
 
-    static Matrix createXRotation(float angle) {
-        return new Matrix(new float[][]{
-                {1, 0, 0, 0},
-                {0, (float) Math.cos(angle), (float) -Math.sin(angle), 0},
-                {0, (float) Math.sin(angle), (float) Math.cos(angle), 0},
-                {0, 0, 0, 1}});
-    }
-
-    static Matrix createYRotation(float angle) {
-        return new Matrix(new float[][]{
-                {(float) Math.cos(angle), 0, (float) Math.sin(angle), 0},
-                {0, 1, 0, 0},
-                {(float) -Math.sin(angle), 0, (float) Math.cos(angle), 0},
-                {0, 0, 0, 1}});
-    }
-
-    static Matrix createZRotation(float angle) {
-        return new Matrix(new float[][]{
-                {(float) Math.cos(angle), (float) -Math.sin(angle), 0, 0},
-                {(float) Math.sin(angle), (float) Math.cos(angle), 0, 0},
-                {0, 0, 1, 0},
-                {0, 0, 0, 1}});
+    static Matrix createRotation(float angle, String axis) {
+        Matrix rotMatrix = createId();
+        float cos = (float) Math.cos(angle);
+        float sin = (float) Math.sin(angle);
+        switch (axis) {
+            case "x":
+                rotMatrix.val[1][1] = cos; rotMatrix.val[1][2] = -sin;
+                rotMatrix.val[2][1] = sin; rotMatrix.val[2][2] = cos;
+                break;
+            case "y":
+                rotMatrix.val[0][0] = cos;  rotMatrix.val[0][2] = sin;
+                rotMatrix.val[2][0] = -sin; rotMatrix.val[2][2] = cos;
+                break;
+            case "z":
+                rotMatrix.val[0][0] = cos; rotMatrix.val[0][1] = -sin;
+                rotMatrix.val[1][0] = sin; rotMatrix.val[1][1] = cos;
+                break;
+        }
+        return rotMatrix;
     }
 
     static Matrix createTranslation(float dx, float dy, float dz) {
-        return new Matrix(new float[][]{
-                {1, 0, 0, dx},
-                {0, 1, 0, dy},
-                {0, 0, 1, dz},
-                {0, 0, 0, 1}});
+        Matrix transMatrix = createId();
+        transMatrix.val[0][3] = dx; transMatrix.val[1][3] = dy; transMatrix.val[2][3] = dz;
+        return transMatrix;
     }
 
     void apply(List<Triangle> ts) {

@@ -245,8 +245,8 @@ public class SDRaytracer {
         Cube.addCube(triangles, -70, -26, -40, 130, 3, 40, new RGB(.5f, .5f, .5f), 0.2f);
 
 
-        Matrix mRx = Matrix.createXRotation((float) (x_angle_factor * Math.PI / 16));
-        Matrix mRy = Matrix.createYRotation((float) (y_angle_factor * Math.PI / 16));
+        Matrix mRx = Matrix.createRotation((float) (x_angle_factor * Math.PI / 16),"x");
+        Matrix mRy = Matrix.createRotation((float) (y_angle_factor * Math.PI / 16), "y");
         Matrix mT = Matrix.createTranslation(0, 0, 200);
         Matrix m = mT.mult(mRx).mult(mRy);
         m.print();
