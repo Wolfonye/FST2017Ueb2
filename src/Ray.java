@@ -36,4 +36,20 @@ class Ray {
         //DEBUG.debug("Intersection point: "+ip.x+","+ip.y+","+ip.z);
         return new IPoint(t, ip, dist);
     }
+
+    IPoint hitObject(Scene scene) {
+        IPoint isect = new IPoint(null, null, -1);
+        float idist = -1;
+        for (Triangle t : scene.getTriangles()) {
+            IPoint ip = intersect(t);
+            if (ip.dist != -1)
+                if ((idist == -1) || (ip.dist < idist)) { // save that intersection
+                    idist = ip.dist;
+                    isect.ipoint = ip.ipoint;
+                    isect.dist = ip.dist;
+                    isect.triangle = t;
+                }
+        }
+        return isect;  // return intersection point and normal
+    }
 }

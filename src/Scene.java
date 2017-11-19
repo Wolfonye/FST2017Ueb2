@@ -1,7 +1,19 @@
+import java.util.ArrayList;
 import java.util.List;
 
-class Cube {
-    public static void addCube(List<Triangle> triangles, int x, int y, int z, int w, int h, int d, RGB c, float sh) {  //front
+public class Scene {
+    private List<Triangle> triangles = new ArrayList<>();
+
+    public List<Triangle> getTriangles() {
+        return triangles;
+    }
+
+    public void setTriangles(List<Triangle> triangles) {
+        this.triangles = triangles;
+    }
+
+
+    public void addCube(int x, int y, int z, int w, int h, int d, RGB c, float sh) {  //front
         triangles.add(new Triangle(new Vec3D(x, y, z), new Vec3D(x + w, y, z), new Vec3D(x, y + h, z), c, sh));
         triangles.add(new Triangle(new Vec3D(x + w, y, z), new Vec3D(x + w, y + h, z), new Vec3D(x, y + h, z), c, sh));
         //left
@@ -19,6 +31,5 @@ class Cube {
         //back
         triangles.add(new Triangle(new Vec3D(x, y, z + d), new Vec3D(x, y + h, z + d), new Vec3D(x + w, y, z + d), c, sh));
         triangles.add(new Triangle(new Vec3D(x + w, y, z + d), new Vec3D(x, y + h, z + d), new Vec3D(x + w, y + h, z + d), c, sh));
-
     }
 }

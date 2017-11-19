@@ -22,4 +22,9 @@ class RGB {
         return color;
     }
 
+    public RGB addColor(RGB c2, float ratio) {
+        return new RGB((this.red + c2.red * ratio),
+                (this.green + c2.green * ratio),
+                (this.blue + c2.blue * ratio));
+    }
 }

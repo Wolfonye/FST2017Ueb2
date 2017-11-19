@@ -2,7 +2,6 @@ import javax.swing.*;
 import java.awt.*;
 import java.awt.event.KeyAdapter;
 import java.awt.event.KeyEvent;
-import java.util.ArrayList;
 import java.util.List;
 import java.util.concurrent.ExecutionException;
 import java.util.concurrent.ExecutorService;
@@ -21,6 +20,8 @@ public class SDRaytracer {
     int height = 1000;
 
     JFrame frame;
+    Scene scene;
+
     Future[] futureList = new Future[width];
     int nrOfProcessors = Runtime.getRuntime().availableProcessors();
     ExecutorService eservice = Executors.newFixedThreadPool(nrOfProcessors);
@@ -28,8 +29,6 @@ public class SDRaytracer {
     int maxRec = 3;
     int rayPerPixel = 1;
     int startX, startY, startZ;
-
-    List<Triangle> triangles;
 
     Light mainLight = new Light(new Vec3D(0, 100, 0), new RGB(0.1f, 0.1f, 0.1f));
 
@@ -44,7 +43,6 @@ public class SDRaytracer {
     float fovx = (float) 0.628;
     float fovy = (float) 0.628;
     RGB ambient_color = new RGB(0.01f, 0.01f, 0.01f);
-    RGB background_color = new RGB(0.05f, 0.05f, 0.05f);
     RGB black = new RGB(0.0f, 0.0f, 0.0f);
     int y_angle_factor = 4, x_angle_factor = -4;
 
@@ -151,7 +149,6 @@ public class SDRaytracer {
         frame.setVisible(true);
     }
 
-    Ray eye_ray = new Ray();
     double tan_fovx;
     double tan_fovy;
 
@@ -176,50 +173,26 @@ public class SDRaytracer {
 
     RGB rayTrace(Ray ray, int rec) {
         if (rec > maxRec) return black;
-        IPoint ip = hitObject(ray);  // (ray, p, n, triangle);
+        IPoint ip = ray.hitObject(scene);  // (ray, p, n, triangle);
         if (ip.dist > IPoint.epsilon)
             return lighting(ray, ip, rec);
         else
             return black;
     }
 
-
-    IPoint hitObject(Ray ray) {
-        IPoint isect = new IPoint(null, null, -1);
-        float idist = -1;
-        for (Triangle t : triangles) {
-            IPoint ip = ray.intersect(t);
-            if (ip.dist != -1)
-                if ((idist == -1) || (ip.dist < idist)) { // save that intersection
-                    idist = ip.dist;
-                    isect.ipoint = ip.ipoint;
-                    isect.dist = ip.dist;
-                    isect.triangle = t;
-                }
-        }
-        return isect;  // return intersection point and normal
-    }
-
-
-    RGB addColors(RGB c1, RGB c2, float ratio) {
-        return new RGB((c1.red + c2.red * ratio),
-                (c1.green + c2.green * ratio),
-                (c1.blue + c2.blue * ratio));
-    }
-
     RGB lighting(Ray ray, IPoint ip, int rec) {
         Vec3D point = ip.ipoint;
         Triangle triangle = ip.triangle;
-        RGB color = addColors(triangle.color, ambient_color, 1);
+        RGB color = triangle.color.addColor(ambient_color, 1);
         Ray shadow_ray = new Ray();
         for (Light light : lights) {
             shadow_ray.start = point;
             shadow_ray.dir = light.position.minus(point).mult(-1);
             shadow_ray.dir.normalize();
-            IPoint ip2 = hitObject(shadow_ray);
+            IPoint ip2 = shadow_ray.hitObject(scene);
             if (ip2.dist < IPoint.epsilon) {
                 float ratio = Math.max(0, shadow_ray.dir.dot(triangle.normal));
-                color = addColors(color, light.color, ratio);
+                color = color.addColor(light.color, ratio);
             }
         }
         Ray reflection = new Ray();
@@ -230,19 +203,17 @@ public class SDRaytracer {
         reflection.dir.normalize();
         RGB rcolor = rayTrace(reflection, rec + 1);
         float ratio = (float) Math.pow(Math.max(0, reflection.dir.dot(L)), triangle.shininess);
-        color = addColors(color, rcolor, ratio);
+        color = color.addColor(rcolor, ratio);
         return (color);
     }
 
     void createScene() {
-        triangles = new ArrayList<Triangle>();
-
-
-        Cube.addCube(triangles, 0, 35, 0, 10, 10, 10, new RGB(0.3f, 0, 0), 0.4f);       //rot, klein
-        Cube.addCube(triangles, -70, -20, -20, 20, 100, 100, new RGB(0f, 0, 0.3f), .4f);
-        Cube.addCube(triangles, -30, 30, 40, 20, 20, 20, new RGB(0, 0.4f, 0), 0.2f);        // gr�n, klein
-        Cube.addCube(triangles, 50, -20, -40, 10, 80, 100, new RGB(.5f, .5f, .5f), 0.2f);
-        Cube.addCube(triangles, -70, -26, -40, 130, 3, 40, new RGB(.5f, .5f, .5f), 0.2f);
+        scene = new Scene();
+        scene.addCube(0, 35, 0, 10, 10, 10, new RGB(0.3f, 0, 0), 0.4f);       //rot, klein
+        scene.addCube(-70, -20, -20, 20, 100, 100, new RGB(0f, 0, 0.3f), .4f);
+        scene.addCube(-30, 30, 40, 20, 20, 20, new RGB(0, 0.4f, 0), 0.2f);        // gr�n, klein
+        scene.addCube(50, -20, -40, 10, 80, 100, new RGB(.5f, .5f, .5f), 0.2f);
+        scene.addCube(-70, -26, -40, 130, 3, 40, new RGB(.5f, .5f, .5f), 0.2f);
 
 
         Matrix mRx = Matrix.createRotation((float) (x_angle_factor * Math.PI / 16),"x");
@@ -250,7 +221,7 @@ public class SDRaytracer {
         Matrix mT = Matrix.createTranslation(0, 0, 200);
         Matrix m = mT.mult(mRx).mult(mRy);
         m.print();
-        m.apply(triangles);
+        m.apply(scene.getTriangles());
     }
 
 }
