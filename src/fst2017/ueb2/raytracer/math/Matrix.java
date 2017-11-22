@@ -1,6 +1,8 @@
+package fst2017.ueb2.raytracer.math;
+
 import java.util.List;
 
-class Matrix {
+public class Matrix {
     float val[][] = new float[4][4];
 
     Matrix() {
@@ -10,7 +12,7 @@ class Matrix {
         val = vs;
     }
 
-    void print() {
+    public void print() {
         for (int i = 0; i < 4; i++) {
             for (int j = 0; j < 4; j++) {
                 System.out.print(" " + (val[i][j] + "       ").substring(0, 8));
@@ -20,7 +22,7 @@ class Matrix {
     }
 
 
-    Matrix mult(Matrix m) {
+    public Matrix mult(Matrix m) {
         Matrix r = new Matrix();
         for (int i = 0; i < 4; i++)
             for (int j = 0; j < 4; j++) {
@@ -52,7 +54,7 @@ class Matrix {
                 {0, 0, 0, 1}});
     }
 
-    static Matrix createRotation(float angle, String axis) {
+    public static Matrix createRotation(float angle, String axis) {
         Matrix rotMatrix = createId();
         float cos = (float) Math.cos(angle);
         float sin = (float) Math.sin(angle);
@@ -73,21 +75,21 @@ class Matrix {
         return rotMatrix;
     }
 
-    static Matrix createTranslation(float dx, float dy, float dz) {
+    public static Matrix createTranslation(float dx, float dy, float dz) {
         Matrix transMatrix = createId();
         transMatrix.val[0][3] = dx; transMatrix.val[1][3] = dy; transMatrix.val[2][3] = dz;
         return transMatrix;
     }
 
-    void apply(List<Triangle> ts) {
+    public void apply(List<Triangle> ts) {
         for (Triangle t : ts) {
             t.p1 = this.mult(t.p1);
             t.p2 = this.mult(t.p2);
             t.p3 = this.mult(t.p3);
             Vec3D e1 = t.p2.minus(t.p1),
                     e2 = t.p3.minus(t.p1);
-            t.normal = e1.cross(e2);
-            t.normal.normalize();
+            t.setNormal(e1.cross(e2));
+            t.getNormal().normalize();
         }
     }
 }

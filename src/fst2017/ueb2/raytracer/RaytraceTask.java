@@ -1,3 +1,8 @@
+package fst2017.ueb2.raytracer;
+
+import fst2017.ueb2.raytracer.SDRaytracer;
+import fst2017.ueb2.raytracer.math.Ray;
+
 import java.util.concurrent.Callable;
 
 class RaytraceTask implements Callable {

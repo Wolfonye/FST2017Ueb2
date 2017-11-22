@@ -1,3 +1,8 @@
+package fst2017.ueb2.raytracer;
+
+import fst2017.ueb2.raytracer.math.Triangle;
+import fst2017.ueb2.raytracer.math.Vec3D;
+
 import java.util.ArrayList;
 import java.util.List;
 
