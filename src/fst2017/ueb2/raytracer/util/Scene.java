@@ -1,7 +1,9 @@
-package fst2017.ueb2.raytracer;
+package fst2017.ueb2.raytracer.util;
 
 import fst2017.ueb2.raytracer.math.Triangle;
 import fst2017.ueb2.raytracer.math.Vec3D;
+import fst2017.ueb2.raytracer.util.Light;
+import fst2017.ueb2.raytracer.util.RGB;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -9,9 +11,13 @@ import java.util.List;
 public class Scene {
     private List<Triangle> triangles = new ArrayList<>();
 
+
+    Light lights[];
+
     public List<Triangle> getTriangles() {
         return triangles;
     }
+
 
     public void setTriangles(List<Triangle> triangles) {
         this.triangles = triangles;
@@ -37,4 +43,13 @@ public class Scene {
         triangles.add(new Triangle(new Vec3D(x, y, z + d), new Vec3D(x, y + h, z + d), new Vec3D(x + w, y, z + d), c, sh));
         triangles.add(new Triangle(new Vec3D(x + w, y, z + d), new Vec3D(x, y + h, z + d), new Vec3D(x + w, y + h, z + d), c, sh));
     }
+
+    public void setLights(Light[] lights) {
+        this.lights = lights;
+    }
+
+    public Light[] getLights() {
+        return lights;
+    }
+
 }

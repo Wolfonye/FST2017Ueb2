@@ -1,4 +1,4 @@
-package fst2017.ueb2.raytracer;
+package fst2017.ueb2.raytracer.util;
 
 import java.awt.*;
 
@@ -6,7 +6,7 @@ public class RGB {
     float red, green, blue;
     Color color;
 
-    RGB(float r, float g, float b) {
+    public RGB(float r, float g, float b) {
         if (r > 1) r = 1;
         else if (r < 0) r = 0;
         if (g > 1) g = 1;
@@ -18,7 +18,7 @@ public class RGB {
         blue = b;
     }
 
-    Color color() {
+    public Color color() {
         if (color != null) return color;
         color = new Color((int) (red * 255), (int) (green * 255), (int) (blue * 255));
         return color;

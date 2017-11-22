@@ -1,6 +1,6 @@
 package fst2017.ueb2.raytracer.math;
 
-import fst2017.ueb2.raytracer.Scene;
+import fst2017.ueb2.raytracer.util.Scene;
 
 public class Ray {
     private Vec3D start = new Vec3D(0, 0, 0);
@@ -49,7 +49,7 @@ public class Ray {
             if (ip.dist != -1)
                 if ((idist == -1) || (ip.dist < idist)) { // save that intersection
                     idist = ip.dist;
-                    isect.ipoint = ip.ipoint;
+                    isect.setIpoint(ip.getIpoint());
                     isect.dist = ip.dist;
                     isect.setTriangle(t);
                 }

@@ -1,5 +1,5 @@
 package fst2017.ueb2.raytracer.math;
-import fst2017.ueb2.raytracer.RGB;
+import fst2017.ueb2.raytracer.util.RGB;
 public class Triangle {
     Vec3D p1, p2, p3;
     private RGB color;
