@@ -1,8 +1,11 @@
+package fst2017.ueb2.raytracer;
+
+import fst2017.ueb2.raytracer.math.*;
+
 import javax.swing.*;
 import java.awt.*;
 import java.awt.event.KeyAdapter;
 import java.awt.event.KeyEvent;
-import java.util.List;
 import java.util.concurrent.ExecutionException;
 import java.util.concurrent.ExecutorService;
 import java.util.concurrent.Executors;
@@ -35,7 +38,7 @@ public class SDRaytracer {
     Light lights[] = new Light[]{mainLight
             , new Light(new Vec3D(100, 200, 300), new RGB(0.5f, 0, 0.0f))
             , new Light(new Vec3D(-100, 200, 300), new RGB(0.0f, 0, 0.5f))
-            //,new Light(new Vec3D(-100,0,0), new RGB(0.0f,0.8f,0.0f))
+            //,new Light(new fst2017.ueb2.raytracer.math.Vec3D(-100,0,0), new RGB(0.0f,0.8f,0.0f))
     };
 
     RGB[][] image = new RGB[width][height];
@@ -174,35 +177,35 @@ public class SDRaytracer {
     RGB rayTrace(Ray ray, int rec) {
         if (rec > maxRec) return black;
         IPoint ip = ray.hitObject(scene);  // (ray, p, n, triangle);
-        if (ip.dist > IPoint.epsilon)
+        if (ip.getDist() > IPoint.EPSILON)
             return lighting(ray, ip, rec);
         else
             return black;
     }
 
     RGB lighting(Ray ray, IPoint ip, int rec) {
-        Vec3D point = ip.ipoint;
-        Triangle triangle = ip.triangle;
-        RGB color = triangle.color.addColor(ambient_color, 1);
+        Vec3D point = ip.getIpoint();
+        Triangle triangle = ip.getTriangle();
+        RGB color = triangle.getColor().addColor(ambient_color, 1);
         Ray shadow_ray = new Ray();
         for (Light light : lights) {
-            shadow_ray.start = point;
-            shadow_ray.dir = light.position.minus(point).mult(-1);
-            shadow_ray.dir.normalize();
+            shadow_ray.setStart(point);
+            shadow_ray.setDir(light.position.minus(point).mult(-1));
+            shadow_ray.getDir().normalize();
             IPoint ip2 = shadow_ray.hitObject(scene);
-            if (ip2.dist < IPoint.epsilon) {
-                float ratio = Math.max(0, shadow_ray.dir.dot(triangle.normal));
+            if (ip2.getDist() < IPoint.EPSILON) {
+                float ratio = Math.max(0, shadow_ray.getDir().dot(triangle.getNormal()));
                 color = color.addColor(light.color, ratio);
             }
         }
         Ray reflection = new Ray();
         //R = 2N(N*L)-L)    L ausgehender Vektor
-        Vec3D L = ray.dir.mult(-1);
-        reflection.start = point;
-        reflection.dir = triangle.normal.mult(2 * triangle.normal.dot(L)).minus(L);
-        reflection.dir.normalize();
+        Vec3D L = ray.getDir().mult(-1);
+        reflection.setStart(point);
+        reflection.setDir(triangle.getNormal().mult(2 * triangle.getNormal().dot(L)).minus(L));
+        reflection.getDir().normalize();
         RGB rcolor = rayTrace(reflection, rec + 1);
-        float ratio = (float) Math.pow(Math.max(0, reflection.dir.dot(L)), triangle.shininess);
+        float ratio = (float) Math.pow(Math.max(0, reflection.getDir().dot(L)), triangle.getShininess());
         color = color.addColor(rcolor, ratio);
         return (color);
     }
@@ -216,7 +219,7 @@ public class SDRaytracer {
         scene.addCube(-70, -26, -40, 130, 3, 40, new RGB(.5f, .5f, .5f), 0.2f);
 
 
-        Matrix mRx = Matrix.createRotation((float) (x_angle_factor * Math.PI / 16),"x");
+        Matrix mRx = Matrix.createRotation((float) (x_angle_factor * Math.PI / 16), "x");
         Matrix mRy = Matrix.createRotation((float) (y_angle_factor * Math.PI / 16), "y");
         Matrix mT = Matrix.createTranslation(0, 0, 200);
         Matrix m = mT.mult(mRx).mult(mRy);

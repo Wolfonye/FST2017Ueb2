@@ -1,6 +1,8 @@
+package fst2017.ueb2.raytracer;
+
 import java.awt.*;
 
-class RGB {
+public class RGB {
     float red, green, blue;
     Color color;
 
