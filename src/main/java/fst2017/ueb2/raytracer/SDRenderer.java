@@ -2,6 +2,8 @@ package fst2017.ueb2.raytracer;
 
 import fst2017.ueb2.raytracer.math.*;
 import fst2017.ueb2.raytracer.util.*;
+import lombok.Getter;
+import lombok.Setter;
 
 import javax.swing.*;
 import java.awt.*;
@@ -19,8 +21,8 @@ public class SDRenderer {
     private Scene scene;
 
     private boolean profiling = false;
-    private int width = 1000;
-    private int height = 1000;
+    @Getter @Setter private int width = 1000;
+    @Getter @Setter private int height = 1000;
 
     private Future[] futureList = new Future[getWidth()];
     private int nrOfProcessors = Runtime.getRuntime().availableProcessors();
@@ -190,21 +192,5 @@ public class SDRenderer {
         Matrix m = mT.mult(mRx).mult(mRy);
         m.print();
         m.apply(scene.getTriangles());
-    }
-
-    public int getWidth() {
-        return width;
-    }
-
-    public void setWidth(int width) {
-        this.width = width;
-    }
-
-    public int getHeight() {
-        return height;
-    }
-
-    public void setHeight(int height) {
-        this.height = height;
     }
 }

@@ -1,10 +1,12 @@
 package fst2017.ueb2.raytracer.math;
 
 import fst2017.ueb2.raytracer.util.Scene;
+import lombok.Getter;
+import lombok.Setter;
 
 public class Ray {
-    private Vec3D start = new Vec3D(0, 0, 0);
-    private Vec3D dir = new Vec3D(0, 0, 0);
+    @Getter @Setter private Vec3D start = new Vec3D(0, 0, 0);
+    @Getter @Setter private Vec3D dir = new Vec3D(0, 0, 0);
 
     public void setStart(float x, float y, float z) {
         setStart(new Vec3D(x, y, z));
@@ -46,30 +48,14 @@ public class Ray {
         float idist = -1;
         for (Triangle t : scene.getTriangles()) {
             IPoint ip = intersect(t);
-            if (ip.dist != -1)
-                if ((idist == -1) || (ip.dist < idist)) { // save that intersection
-                    idist = ip.dist;
+            if (ip.getDist() != -1)
+                if ((idist == -1) || (ip.getDist() < idist)) { // save that intersection
+                    idist = ip.getDist();
                     isect.setIpoint(ip.getIpoint());
-                    isect.dist = ip.dist;
+                    isect.setDist(ip.getDist());
                     isect.setTriangle(t);
                 }
         }
         return isect;  // return intersection point and normal
-    }
-
-    public Vec3D getStart() {
-        return start;
-    }
-
-    public void setStart(Vec3D start) {
-        this.start = start;
-    }
-
-    public Vec3D getDir() {
-        return dir;
-    }
-
-    public void setDir(Vec3D dir) {
-        this.dir = dir;
     }
 }
