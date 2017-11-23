@@ -20,7 +20,7 @@ public class Ray {
 
     // see M�ller&Haines, page 305
     IPoint intersect(Triangle t) {
-        float epsilon = IPoint.EPSILON;
+        float epsilon = IPoint.getEpsilon();
         Vec3D e1 = t.p2.minus(t.p1);
         Vec3D e2 = t.p3.minus(t.p1);
         Vec3D p = getDir().cross(e2);

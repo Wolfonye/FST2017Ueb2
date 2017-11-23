@@ -14,7 +14,6 @@ public class Light {
     public Vec3D getPosition() {
         return position;
     }
-
     public void setPosition(Vec3D position) {
         this.position = position;
     }
@@ -22,7 +21,6 @@ public class Light {
     public RGB getColor() {
         return color;
     }
-
     public void setColor(RGB color) {
         this.color = color;
     }

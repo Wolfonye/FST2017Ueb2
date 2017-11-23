@@ -10,19 +10,7 @@ import java.util.List;
 
 public class Scene {
     private List<Triangle> triangles = new ArrayList<>();
-
-
-    Light lights[];
-
-    public List<Triangle> getTriangles() {
-        return triangles;
-    }
-
-
-    public void setTriangles(List<Triangle> triangles) {
-        this.triangles = triangles;
-    }
-
+    private Light lights[];
 
     public void addCube(int x, int y, int z, int w, int h, int d, RGB c, float sh) {  //front
         triangles.add(new Triangle(new Vec3D(x, y, z), new Vec3D(x + w, y, z), new Vec3D(x, y + h, z), c, sh));
@@ -47,9 +35,15 @@ public class Scene {
     public void setLights(Light[] lights) {
         this.lights = lights;
     }
-
     public Light[] getLights() {
         return lights;
+    }
+
+    public List<Triangle> getTriangles() {
+        return triangles;
+    }
+    public void setTriangles(List<Triangle> triangles) {
+        this.triangles = triangles;
     }
 
 }

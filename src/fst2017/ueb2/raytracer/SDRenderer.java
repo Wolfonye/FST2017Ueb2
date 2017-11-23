@@ -30,16 +30,16 @@ public class SDRenderer {
     int rayPerPixel = 1;
     int startX, startY, startZ;
 
-    double tan_fovx;
-    double tan_fovy;
+    double tanFovX;
+    double ranFovY;
 
     RGB[][] image = new RGB[getWidth()][getHeight()];
 
     private float fovx = (float) 0.628;
     private float fovy = (float) 0.628;
-    private RGB ambient_color = new RGB(0.01f, 0.01f, 0.01f);
+    private RGB ambientColor = new RGB(0.01f, 0.01f, 0.01f);
 
-    private int y_angle_factor = 4, x_angle_factor = -4;
+    private int yAngleFactor = 4, xAngleFactor = -4;
 
 
     public SDRenderer() {
@@ -54,7 +54,7 @@ public class SDRenderer {
         sdRaytracer = new SDRaytracer(scene);
         sdRaytracer.setMaxRec(maxRec);
         scene.setLights(lights);
-        sdRaytracer.setAmbientColor(ambient_color);
+        sdRaytracer.setAmbientColor(ambientColor);
         sdRaytracer.setScene(scene);
 
         if (!profiling) renderImage();
@@ -65,7 +65,7 @@ public class SDRenderer {
         contentPane.setLayout(new BorderLayout());
         JPanel area = new JPanel() {
             public void paint(Graphics g) {
-                System.out.println("fovx=" + fovx + ", fovy=" + fovy + ", xangle=" + x_angle_factor + ", yangle=" + y_angle_factor);
+                System.out.println("fovx=" + fovx + ", fovy=" + fovy + ", xangle=" + xAngleFactor + ", yangle=" + yAngleFactor);
                 if (image == null) return;
                 for (int i = 0; i < width; i++)
                     for (int j = 0; j < height; j++) {
@@ -80,7 +80,7 @@ public class SDRenderer {
             public void keyPressed(KeyEvent e) {
                 boolean redraw = false;
                 if (e.getKeyCode() == KeyEvent.VK_DOWN) {
-                    x_angle_factor--;
+                    xAngleFactor--;
                     //mainLight.position.y-=10;
                     //fovx=fovx+0.1f;
                     //fovy=fovx;
@@ -88,7 +88,7 @@ public class SDRenderer {
                     redraw = true;
                 }
                 if (e.getKeyCode() == KeyEvent.VK_UP) {
-                    x_angle_factor++;
+                    xAngleFactor++;
                     //mainLight.position.y+=10;
                     //fovx=fovx-0.1f;
                     //fovy=fovx;
@@ -96,7 +96,7 @@ public class SDRenderer {
                     redraw = true;
                 }
                 if (e.getKeyCode() == KeyEvent.VK_LEFT) {
-                    y_angle_factor--;
+                    yAngleFactor--;
                     //mainLight.position.x-=10;
                     //startX-=10;
                     //fovx=fovx+0.1f;
@@ -104,7 +104,7 @@ public class SDRenderer {
                     redraw = true;
                 }
                 if (e.getKeyCode() == KeyEvent.VK_RIGHT) {
-                    y_angle_factor++;
+                    yAngleFactor++;
                     //mainLight.position.x+=10;
                     //startX+=10;
                     //fovx=fovx-0.1f;
@@ -136,8 +136,8 @@ public class SDRenderer {
 
 
     void renderImage() {
-        tan_fovx = Math.tan(fovx);
-        tan_fovy = Math.tan(fovy);
+        tanFovX = Math.tan(fovx);
+        ranFovY = Math.tan(fovy);
         for (int i = 0; i < getWidth(); i++) {
             futureList[i] = (Future) eservice.submit(new RaytraceTask(sdRaytracer,this, i));
         }
@@ -184,8 +184,8 @@ public class SDRenderer {
         scene.addCube(-70, -26, -40, 130, 3, 40, new RGB(.5f, .5f, .5f), 0.2f);
 
 
-        Matrix mRx = Matrix.createRotation((float) (x_angle_factor * Math.PI / 16), "x");
-        Matrix mRy = Matrix.createRotation((float) (y_angle_factor * Math.PI / 16), "y");
+        Matrix mRx = Matrix.createRotation((float) (xAngleFactor * Math.PI / 16), "x");
+        Matrix mRy = Matrix.createRotation((float) (yAngleFactor * Math.PI / 16), "y");
         Matrix mT = Matrix.createTranslation(0, 0, 200);
         Matrix m = mT.mult(mRx).mult(mRy);
         m.print();

@@ -21,7 +21,6 @@ public class Triangle {
     public RGB getColor() {
         return color;
     }
-
     public void setColor(RGB color) {
         this.color = color;
     }
@@ -29,7 +28,6 @@ public class Triangle {
     public Vec3D getNormal() {
         return normal;
     }
-
     public void setNormal(Vec3D normal) {
         this.normal = normal;
     }
@@ -37,7 +35,6 @@ public class Triangle {
     public float getShininess() {
         return shininess;
     }
-
     public void setShininess(float shininess) {
         this.shininess = shininess;
     }

@@ -29,8 +29,8 @@ class RaytraceTask implements Callable {
                 }
                 Ray eye_ray = new Ray();
                 eye_ray.setStart(renderer.startX, renderer.startY, renderer.startZ);   // ro
-                eye_ray.setDir((float) (((0.5 + di) * renderer.tan_fovx * 2.0) / renderer.getWidth() - renderer.tan_fovx),
-                        (float) (((0.5 + dj) * renderer.tan_fovy * 2.0) / renderer.getHeight() - renderer.tan_fovy),
+                eye_ray.setDir((float) (((0.5 + di) * renderer.tanFovX * 2.0) / renderer.getWidth() - renderer.tanFovX),
+                        (float) (((0.5 + dj) * renderer.ranFovY * 2.0) / renderer.getHeight() - renderer.ranFovY),
                         (float) 1f);    // rd
                 eye_ray.normalize();
                 col[j] = renderer.image[i][j].addColor(raytracer.rayTrace(eye_ray, 0), 1.0f / renderer.rayPerPixel);
