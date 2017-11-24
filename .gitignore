@@ -71,3 +71,5 @@ codealike\.json
 \.idea/
 
 TODO\.todo
+
+target/
